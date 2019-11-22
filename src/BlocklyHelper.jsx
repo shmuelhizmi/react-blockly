@@ -2,22 +2,31 @@
  * @param {string} xml
  */
 export default function parseWorkspaceXml(xml) {
-  const arrayTags = ['name', 'custom', 'colour', 'categories', 'blocks', 'button'];
+  const arrayTags = [
+    "name",
+    "custom",
+    "colour",
+    "categories",
+    "blocks",
+    "button"
+  ];
   let xmlDoc = null;
   if (window.DOMParser) {
-    xmlDoc = (new DOMParser()).parseFromString(xml, 'text/xml');
+    xmlDoc = new DOMParser().parseFromString(xml, "text/xml");
   } else if (window.ActiveXObject) {
-    xmlDoc = new ActiveXObject('Microsoft.XMLDOM');
+    xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
     xmlDoc.async = false;
     if (!xmlDoc.loadXML(xml)) {
-      throw new Error(`${xmlDoc.parseError.reason} ${xmlDoc.parseError.srcText}`);
+      throw new Error(
+        `${xmlDoc.parseError.reason} ${xmlDoc.parseError.srcText}`
+      );
     }
   } else {
-    throw new Error('cannot parse xml string!');
+    throw new Error("cannot parse xml string!");
   }
 
   function isArray(o) {
-    return Object.prototype.toString.apply(o) === '[object Array]';
+    return Object.prototype.toString.apply(o) === "[object Array]";
   }
 
   /**
@@ -25,7 +34,7 @@ export default function parseWorkspaceXml(xml) {
    * @param {Array.<string>} result
    */
   function parseNode(xmlNode, result) {
-    if (xmlNode.nodeName === '#text') {
+    if (xmlNode.nodeName === "#text") {
       const v = xmlNode.nodeValue;
       if (v.trim()) {
         result.value = v;
@@ -63,7 +72,6 @@ export default function parseWorkspaceXml(xml) {
   if (xmlDoc.childNodes.length) {
     parseNode(xmlDoc.childNodes[0], result);
   }
-
   return transformed(result);
 }
 
@@ -76,6 +84,7 @@ function transformed(result) {
     const cNew = {};
     cNew.name = c.name;
     cNew.colour = c.colour;
+    cNew.categorystyle = c.categorystyle;
     cNew.custom = c.custom;
     cNew.button = c.button;
     if (c.block) {
@@ -83,7 +92,6 @@ function transformed(result) {
     }
     filteredResult.push(cNew);
   }
-
   return filteredResult;
 }
 
@@ -91,7 +99,7 @@ function parseBlocks(blocks) {
   const arr = ensureArray(blocks);
 
   const res = [];
-  arr.forEach((block) => {
+  arr.forEach(block => {
     const obj = parseObject(block);
     obj.type = block.type;
     res.push(obj);
@@ -104,7 +112,7 @@ function parseFields(fields) {
   const arr = ensureArray(fields);
 
   const res = {};
-  arr.forEach((field) => {
+  arr.forEach(field => {
     res[field.name] = field.value;
   });
 
@@ -115,7 +123,7 @@ function parseValues(values) {
   const arr = ensureArray(values);
 
   const res = {};
-  arr.forEach((value) => {
+  arr.forEach(value => {
     res[value.name] = parseObject(value);
   });
 
@@ -145,7 +153,7 @@ function parseObject(obj) {
   if (obj.mutation) {
     res.mutation = {
       attributes: obj.mutation,
-      innerContent: obj.mutation.value,
+      innerContent: obj.mutation.value
     };
   }
   if (obj.field) {
@@ -159,7 +167,7 @@ function parseObject(obj) {
   }
   if (obj.statement) {
     res.statements = {
-      [obj.statement.name]: parseObject(obj.statement),
+      [obj.statement.name]: parseObject(obj.statement)
     };
   }
 
