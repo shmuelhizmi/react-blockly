@@ -1,6 +1,6 @@
 # react-blockly
 
-[![Built on Blockly](https://tinyurl.com/built-on-blockly)](https://github.com/google/blockly)
+[![Built on Blockly](https://tinyurl.com/built-on-blockly)](https://github.com/google/blockly) - version ^3.20191014.4
 
 A React component that embeds a [Blockly](https://developers.google.com/blockly/) visual programming editor.
 
